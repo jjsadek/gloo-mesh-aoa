@@ -14,7 +14,7 @@ spec:
     chart: gloo-mesh-enterprise
     helm:
       values: |
-        licenseKey: <INSERT_LICENSE_KEY_HERE>
+        licenseKey: eyJleHAiOjE2NDI4Nzc3NTAsImlhdCI6MTY0MjcwNDk1MCwiayI6InhJdm1kUSIsImx0IjoidHJpYWwiLCJwcm9kdWN0IjoiZ2xvbyJ9.k-JF2B2R9mLfgXSqpRbO8dVtzn2EZG9wTT9ALGBSm0Y
     repoURL: https://storage.googleapis.com/gloo-mesh-enterprise/gloo-mesh-enterprise
     targetRevision: 1.2.9
   syncPolicy:
