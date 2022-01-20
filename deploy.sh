@@ -2,7 +2,7 @@
 cluster1_context="cluster1"
 cluster2_context="cluster2"
 mgmt_context="mgmt"
-meshctl_version="v1.2.7"
+meshctl_version="v1.2.9"
 
 # check to see if defined contexts exist
 if [[ $(kubectl config get-contexts | grep ${mgmt_context}) == "" ]] || [[ $(kubectl config get-contexts | grep ${cluster1_context}) == "" ]] || [[ $(kubectl config get-contexts | grep ${cluster2_context}) == "" ]]; then
@@ -12,7 +12,6 @@ if [[ $(kubectl config get-contexts | grep ${mgmt_context}) == "" ]] || [[ $(kub
 fi
 
 # install argocd on mgmt, ${cluster1_context}, and ${cluster2_context}
-cd argocd
 ./install-argocd.sh default ${mgmt_context}
 ./install-argocd.sh default ${cluster1_context}
 ./install-argocd.sh default ${cluster2_context}
@@ -24,24 +23,25 @@ cd argocd
 
 # deploy mgmt environment apps aoa
 kubectl apply -f environments/mgmt/meta-mgmt-env-apps.yaml --context ${mgmt_context}
-# use later
-#kubectl apply -f environments/mgmt/meta/meta-mgmt-env-config.yaml
 
 # deploy cluster1 environment apps aoa
-kubectl apply -f environments/cluster1/meta/meta-cluster1-env-apps.yaml
-# use later
-#kubectl apply -f environments/cluster1/meta/meta-cluster1-env-config.yaml
+kubectl apply -f environments/cluster1/meta-cluster1-env-apps.yaml --context ${cluster1_context}
 
 # deploy cluster2 environment apps aoa
-kubectl apply -f environments/cluster2/meta/meta-cluster2-env-apps.yaml
-# use later
-#kubectl apply -f environments/cluster2/meta/meta-cluster2-env-config.yaml
+kubectl apply -f environments/cluster2/meta-cluster2-env-apps.yaml --context ${cluster2_context}
 
 # register clusters to gloo mesh
-cd ../gloo-mesh/
-./scripts/meshctl-register.sh ${mgmt_context} ${cluster1_context} ${meshctl_version}
-./scripts/meshctl-register.sh ${mgmt_context} ${cluster2_context} ${meshctl_version}
+./tools/meshctl-register.sh ${mgmt_context} ${cluster1_context} ${meshctl_version}
+./tools/meshctl-register.sh ${mgmt_context} ${cluster2_context} ${meshctl_version}
 
+# deploy cluster2 environment config aoa
+#kubectl apply -f environments/cluster2/meta-cluster2-env-config.yaml --context ${cluster2_context}
+
+# deploy mgmt cluster1 config aoa
+#kubectl apply -f environments/cluster1/meta-cluster1-env-config.yaml --context ${cluster1_context}
+
+# deploy mgmt environment config aoa
+kubectl apply -f environments/mgmt/meta-mgmt-env-config.yaml --context ${mgmt_context}
 
 # echo port-forward commands
 echo
