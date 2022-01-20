@@ -1,4 +1,5 @@
 # gloo-mesh-demo-aoa
+This repo leverages the Argo CD app-of-apps pattern to demonstrate a GitOps workflow to deploy and configure a multi-cluster mesh demo
  
 Spin up three clusters named `cluster1`, `cluster2`, and `mgmt`
 
