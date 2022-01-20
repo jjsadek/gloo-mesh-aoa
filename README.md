@@ -14,3 +14,4 @@ Resource Requirements:
 Note:
 - A temporary (2 day currently) license key is used here for demonstration purposes
 - By default, the script expects to deploy into three clusters named `mgmt`, `cluster1`, and `cluster2`. This is configurable by changing the variables in the `deploy.sh`. A check is done to ensure that the defined contexts exist before proceeding with the installation.
+- Although you may change the contexts where apps are deployed as describe above, the Istio cluster names will remain stable references `cluster1` and `cluster2`
