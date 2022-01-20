@@ -12,6 +12,7 @@ if [[ $(kubectl config get-contexts | grep ${mgmt_context}) == "" ]] || [[ $(kub
 fi
 
 # install argocd on mgmt, ${cluster1_context}, and ${cluster2_context}
+cd argocd
 ./install-argocd.sh default ${mgmt_context}
 ./install-argocd.sh default ${cluster1_context}
 ./install-argocd.sh default ${cluster2_context}
@@ -21,27 +22,33 @@ fi
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster1_context}
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster2_context}
 
-# deploy mgmt environment apps aoa
-kubectl apply -f environments/mgmt/meta-mgmt-env-apps.yaml --context ${mgmt_context}
+# deploy mgmt, cluster1, and cluster2 environment infra aoa
+cd ../environments/
+kubectl apply -f mgmt/meta-mgmt-env-infra.yaml --context ${mgmt_context}
+kubectl apply -f cluster1/meta-cluster1-env-infra.yaml --context ${cluster1_context}
+kubectl apply -f cluster2/meta-cluster2-env-infra.yaml --context ${cluster2_context}
 
-# deploy cluster1 environment apps aoa
-kubectl apply -f environments/cluster1/meta-cluster1-env-apps.yaml --context ${cluster1_context}
-
-# deploy cluster2 environment apps aoa
-kubectl apply -f environments/cluster2/meta-cluster2-env-apps.yaml --context ${cluster2_context}
+# wait for completion of istio install
+../tools/wait-for-rollout.sh deployment istiod istio-system 10 ${cluster1_context}
+../tools/wait-for-rollout.sh deployment istiod istio-system 10 ${cluster2_context}
 
 # register clusters to gloo mesh
-./tools/meshctl-register.sh ${mgmt_context} ${cluster1_context} ${meshctl_version}
-./tools/meshctl-register.sh ${mgmt_context} ${cluster2_context} ${meshctl_version}
+../tools/meshctl-register.sh ${mgmt_context} ${cluster1_context} ${meshctl_version}
+../tools/meshctl-register.sh ${mgmt_context} ${cluster2_context} ${meshctl_version}
 
-# deploy cluster2 environment config aoa
-#kubectl apply -f environments/cluster2/meta-cluster2-env-config.yaml --context ${cluster2_context}
+# deploy cluster1, and cluster2 environment apps aoa
+#kubectl apply -f mgmt/meta-mgmt-env-apps.yaml --context ${mgmt_context}
+kubectl apply -f cluster1/meta-cluster1-env-apps.yaml --context ${cluster1_context}
+kubectl apply -f cluster2/meta-cluster2-env-apps.yaml --context ${cluster2_context}
 
-# deploy mgmt cluster1 config aoa
-#kubectl apply -f environments/cluster1/meta-cluster1-env-config.yaml --context ${cluster1_context}
+# wait for completion of bookinfo install
+../tools/wait-for-rollout.sh deployment productpage-v1 default 10 ${cluster1_context}
+../tools/wait-for-rollout.sh deployment productpage-v1 default 10 ${cluster2_context}
 
-# deploy mgmt environment config aoa
-kubectl apply -f environments/mgmt/meta-mgmt-env-config.yaml --context ${mgmt_context}
+# deploy mgmt, cluster1, and cluster2 environment config aoa
+kubectl apply -f mgmt/meta-mgmt-env-config.yaml --context ${mgmt_context}
+#kubectl apply -f cluster1/meta-cluster1-env-apps.yaml --context ${cluster1_context}
+#kubectl apply -f cluster2/meta-cluster2-env-apps.yaml --context ${cluster2_context}
 
 # echo port-forward commands
 echo
