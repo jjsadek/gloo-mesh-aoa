@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: meta-cluster1-env-config
+  name: meta-cluster2-env-config
   namespace: argocd
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
-    repoURL: https://github.com/ably77/gitops-poc/
+    repoURL: https://github.com/ably77/gloo-mesh-aoa/
     targetRevision: HEAD
-    path: environments/cluster1/config/
+    path: environments/cluster2/config/
   destination:
     server: https://kubernetes.default.svc
   syncPolicy:

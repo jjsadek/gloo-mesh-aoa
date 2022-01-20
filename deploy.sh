@@ -23,7 +23,7 @@ cd argocd
 ../tools/wait-for-rollout.sh deployment argocd-server argocd 10 ${cluster2_context}
 
 # deploy mgmt environment apps aoa
-kubectl apply -f environments/mgmt/meta/meta-mgmt-env-apps.yaml --context ${mgmt_context}
+kubectl apply -f environments/mgmt/meta-mgmt-env-apps.yaml --context ${mgmt_context}
 # use later
 #kubectl apply -f environments/mgmt/meta/meta-mgmt-env-config.yaml
 
