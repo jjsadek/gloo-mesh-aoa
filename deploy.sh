@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# note that the character '_' is an invalid value if you are replacing the defaults below
 cluster1_context="cluster1"
 cluster2_context="cluster2"
 mgmt_context="mgmt"
