@@ -10,6 +10,26 @@ gloo_mesh_version="$4"
 
 SVC=$(kubectl --context ${mgmt_context} -n gloo-mesh get svc enterprise-networking -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
+kubectl apply --context ${mgmt_context} -f- <<EOF
+apiVersion: multicluster.solo.io/v1alpha1
+kind: KubernetesCluster
+metadata:
+  name: cluster1
+  namespace: gloo-mesh
+spec:
+  clusterDomain: cluster.local
+EOF
+
+kubectl apply --context ${mgmt_context} -f- <<EOF
+apiVersion: multicluster.solo.io/v1alpha1
+kind: KubernetesCluster
+metadata:
+  name: cluster2
+  namespace: gloo-mesh
+spec:
+  clusterDomain: cluster.local
+EOF
+
 # create gloo-mesh ns in cluster1 and cluster2
 kubectl create ns gloo-mesh --context ${cluster1_context}
 kubectl create ns gloo-mesh --context ${cluster2_context}
