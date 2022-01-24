@@ -18,7 +18,7 @@ Note:
 - Although you may change the contexts where apps are deployed as describe above, the Istio cluster names will remain stable references `cluster1` and `cluster2`
 
 # App of Apps Explained
-Platform owners control the deployment of applications into the cluster with the app-of-apps pattern. The app-of-apps pattern uses an Argo Application to sync all apps in a generic Git directory, rather than directly point to a Kustomize, YAML, or Helm configuration.
+Platform owners control the deployment of applications into the cluster with the app-of-apps pattern. The app-of-apps pattern uses a generic Argo Application to sync all manifests in a particular Git directory, rather than directly point to a Kustomize, YAML, or Helm configuration.
 
 By using the app-of-app pattern, a Platform Administrator can provide some self-service capabilities to end users by delivering a synced directory in Git (i.e. infra team controls `infra` directory, app team to `app` directory) while still controlling what is ultimately deployed to the cluster and exposed through standard Kubernetes RBAC and Policy. This way, with the right policy in place, Applications are not deployed unless successfully committed Git and pushed to the correctly scoped team directory/repo
 ```
