@@ -48,7 +48,7 @@ kubectl apply -f platform-owners/cluster3/cluster3-infra.yaml --context ${cluste
 
 # register clusters to gloo mesh
 #./tools/meshctl-register-helm-argocd.sh ${mgmt_context} ${cluster1_context} ${cluster2_context} ${gloo_mesh_version}
-./tools/meshctl-register-helm-argocd-3clusters.sh ${mgmt_context} ${cluster1_context} ${cluster2_context} ${cluster3_context} ${gloo_mesh_version}
+./tools/meshctl-register-helm-argocd-3-clusters.sh ${mgmt_context} ${cluster1_context} ${cluster2_context} ${cluster3_context} ${gloo_mesh_version}
 
 
 # deploy cluster1, and cluster2 environment apps aoa
