@@ -5,7 +5,8 @@ Spin up three clusters named `cluster1`, `cluster2`, and `mgmt`
 
 Run:
 ```
-./deploy.sh
+./deploy-2clusters.sh           # deploys on mgmt, cluster1, cluster2
+./deploy-3clusters.sh           # deploys on mgmt, cluster1, cluster2, cluster3
 ```
 
 Resource Requirements:
