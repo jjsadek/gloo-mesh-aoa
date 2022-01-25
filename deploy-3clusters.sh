@@ -79,4 +79,5 @@ echo
 echo "You can use the following command to validate which cluster handles the requests:"
 echo "kubectl --context ${cluster1_context} logs -l app=reviews -c istio-proxy -f"
 echo "kubectl --context ${cluster2_context} logs -l app=reviews -c istio-proxy -f"
+echo "kubectl --context ${cluster3_context} logs -l app=reviews -c istio-proxy -f"
 echo

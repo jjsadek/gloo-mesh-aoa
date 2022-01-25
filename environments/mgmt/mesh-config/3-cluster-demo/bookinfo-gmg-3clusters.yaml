@@ -20,7 +20,7 @@ spec:
     routeAction:
       destinations:
       - kubeService:
-          clusterName: cluster3
+          clusterName: cluster1
           name: productpage
           namespace: default
 ---
