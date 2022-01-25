@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/solo-io/gitops-library
     targetRevision: HEAD
-    path: bookinfo/overlay/app/1.2.a-reviews-v1-v2/istio/
+    path: bookinfo/overlay/app/1.1.c-reviews-v3/istio/
   destination:
     server: https://kubernetes.default.svc
     namespace: default
