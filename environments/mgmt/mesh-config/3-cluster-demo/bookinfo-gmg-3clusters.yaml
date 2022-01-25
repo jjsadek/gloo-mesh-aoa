@@ -23,6 +23,10 @@ spec:
           clusterName: cluster1
           name: productpage
           namespace: default
+      - kubeService:
+          clusterName: cluster2
+          name: productpage
+          namespace: default
 ---
 apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
 kind: VirtualGateway
