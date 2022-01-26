@@ -63,7 +63,7 @@ kubectl apply -f platform-owners/cluster3/cluster3-apps.yaml --context ${cluster
 ./tools/wait-for-rollout.sh deployment productpage-v1 default 10 ${cluster3_context}
 
 # deploy mgmt, cluster1, and cluster2 mesh config aoa for 3 cluster demo (cluster1, cluster2, and cluster3)
-kubectl apply -f platform-owners/mgmt/mgmt-mesh-config-3-cluster-demo.yaml --context ${mgmt_context}
+kubectl apply -f platform-owners/mgmt/mgmt-mesh-config.yaml --context ${mgmt_context}
 kubectl apply -f platform-owners/cluster1/cluster1-mesh-config.yaml --context ${cluster1_context}
 kubectl apply -f platform-owners/cluster2/cluster2-mesh-config.yaml --context ${cluster2_context}
 kubectl apply -f platform-owners/cluster3/cluster3-mesh-config.yaml --context ${cluster3_context}
