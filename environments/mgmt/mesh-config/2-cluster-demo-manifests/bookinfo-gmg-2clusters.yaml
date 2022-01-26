@@ -1,0 +1,167 @@
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: RouteTable
+metadata:
+  name: bookinfo-routetable
+  namespace: gloo-mesh
+spec:
+  routes:
+  - matchers:
+    - uri:
+        exact: /productpage
+    - uri:
+        prefix: /static
+    - uri:
+        exact: /login
+    - uri:
+        exact: /logout
+    - uri:
+        prefix: /api/v1/products
+    name: productpage
+    routeAction:
+      destinations:
+      - kubeService:
+          clusterName: cluster1
+          name: productpage
+          namespace: default
+      - kubeService:
+          clusterName: cluster2
+          name: productpage
+          namespace: default
+---
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: VirtualGateway
+metadata:
+  name: bookinfo-virtualgateway
+  namespace: gloo-mesh
+spec:
+  connectionHandlers:
+  - http:
+      routeConfig:
+      - virtualHostSelector:
+          namespaces:
+          - gloo-mesh
+  ingressGatewaySelectors:
+  - destinationSelectors:
+    - kubeServiceMatcher:
+        clusters:
+        - cluster1
+        - cluster2
+        labels:
+          istio: ingressgateway
+        namespaces:
+        - istio-system
+    portName: http2
+---
+apiVersion: networking.enterprise.mesh.gloo.solo.io/v1beta1
+kind: VirtualHost
+metadata:
+  name: bookinfo-virtualhost
+  namespace: gloo-mesh
+spec:
+  domains:
+  - '*'
+  routes:
+  - delegateAction:
+      selector:
+        namespaces:
+        - gloo-mesh
+    matchers:
+    - uri:
+        prefix: /
+---
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  name: bookinfo-gateway-productpage-accesspolicy
+  namespace: gloo-mesh
+spec:
+  destinationSelector:
+  - kubeServiceMatcher:
+      labels:
+        service: productpage
+      namespaces:
+      - default
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster1
+        name: istio-ingressgateway-service-account
+        namespace: istio-system
+      - clusterName: cluster2
+        name: istio-ingressgateway-service-account
+        namespace: istio-system
+---
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  name: bookinfo-productpage-details-reviews-accesspolicy
+  namespace: gloo-mesh
+spec:
+  destinationSelector:
+  - kubeServiceMatcher:
+      labels:
+        service: details
+      namespaces:
+      - default
+  - kubeServiceMatcher:
+      labels:
+        service: reviews
+      namespaces:
+      - default
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster1
+        name: bookinfo-productpage
+        namespace: default
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster2
+        name: bookinfo-productpage
+        namespace: default
+---
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  name: bookinfo-reviews-ratings-accesspolicy
+  namespace: gloo-mesh
+spec:
+  destinationSelector:
+  - kubeServiceMatcher:
+      labels:
+        service: ratings
+      namespaces:
+      - default
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster1
+        name: bookinfo-reviews
+        namespace: default
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster2
+        name: bookinfo-reviews
+        namespace: default
+---
+apiVersion: networking.mesh.gloo.solo.io/v1
+kind: AccessPolicy
+metadata:
+  name: istio-ingressgateway-accesspolicy
+  namespace: gloo-mesh
+spec:
+  destinationSelector:
+  - kubeServiceMatcher:
+      labels:
+        service: productpage
+      namespaces:
+      - default
+  sourceSelector:
+  - kubeServiceAccountRefs:
+      serviceAccounts:
+      - clusterName: cluster1
+        name: istio-ingressgateway-service-account
+        namespace: istio-system
+      - clusterName: cluster2
+        name: istio-ingressgateway-service-account
+        namespace: istio-system
